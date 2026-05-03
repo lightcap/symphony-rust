@@ -1,5 +1,6 @@
 pub mod agent;
 pub mod config;
+pub mod env_loader;
 pub mod http;
 pub mod model;
 pub mod orchestrator;
