@@ -10,12 +10,7 @@ cargo run -- path/to/WORKFLOW.md
 
 If the workflow path is omitted, the service uses `./WORKFLOW.md`.
 
-Local environment files are loaded automatically before startup validation:
-
-- `.env`
-- `.env.local`
-
-Symphony checks the current directory and the directory containing the selected workflow file. Existing process environment variables win over values in these files.
+Local `.env` files are loaded automatically from the current directory before startup validation. Existing process environment variables win over values in `.env`.
 
 Copy `.env.example` to `.env` and fill in local secrets:
 
