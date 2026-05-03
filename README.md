@@ -2,6 +2,10 @@
 
 Rust implementation of the draft Symphony service specification. It runs a long-lived scheduler that reads Linear issues, creates per-issue workspaces, and drives Codex app-server sessions inside those workspaces.
 
+## Development Status
+
+This project is still in active development and is not ready for production or general use. Do not rely on it for unattended automation, critical workflows, or environments where unexpected agent behavior could cause harm.
+
 ## Run
 
 ```sh
