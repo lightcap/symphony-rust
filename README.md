@@ -24,6 +24,14 @@ Enable the optional HTTP status surface with `--port` or `server.port` in `WORKF
 cargo run -- WORKFLOW.md --port 8080
 ```
 
+Before running the daemon, use preflight mode to validate config and Linear read access without dispatching agents or touching workspaces:
+
+```sh
+cargo run -- --preflight WORKFLOW.md
+```
+
+Preflight exits after loading `.env`, validating `WORKFLOW.md`, fetching candidate issues, fetching terminal issues, and checking state refresh for a small candidate sample.
+
 The HTTP extension binds `127.0.0.1` and serves:
 
 - `GET /`
