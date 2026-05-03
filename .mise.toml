@@ -1,0 +1,15 @@
+[tasks.test]
+description = "Run the Rust test suite"
+run = "cargo test"
+
+[tasks.lint]
+description = "Run Clippy with warnings as errors"
+run = "cargo clippy --all-targets -- -D warnings"
+
+[tasks.verify]
+description = "Run tests and lints"
+run = "cargo test && cargo clippy --all-targets -- -D warnings"
+
+[tasks.symphony]
+description = "Run Symphony with WORKFLOW.md and the HTTP status API"
+run = "cargo run -- ${SYMPHONY_WORKFLOW:-WORKFLOW.md} --port ${SYMPHONY_PORT:-8080}"

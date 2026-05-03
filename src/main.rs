@@ -4,6 +4,7 @@ use std::sync::Arc;
 use anyhow::Context;
 use clap::Parser;
 use symphony_rust::config::ConfigManager;
+use symphony_rust::env_loader::load_dotenv;
 use symphony_rust::http;
 use symphony_rust::orchestrator::Orchestrator;
 use symphony_rust::tracker::LinearTracker;
@@ -27,9 +28,13 @@ struct Cli {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    init_logging();
-
     let cli = Cli::parse();
+    let loaded_env_file = load_dotenv().context("failed to load .env")?;
+    init_logging();
+    if let Some(path) = loaded_env_file {
+        info!(path = %path.display(), "env_file loaded");
+    }
+
     let workflow_path = ConfigManager::workflow_path_from_cli(cli.workflow);
     let config = ConfigManager::load_initial(workflow_path).context("startup validation failed")?;
     let initial = config.current().await;

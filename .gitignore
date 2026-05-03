@@ -1,2 +1,7 @@
 /target/
 /.symphony_workspaces/
+/.worktrees/
+.env
+.env.*
+!.env.example
+.mise.local.toml

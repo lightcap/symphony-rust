@@ -10,6 +10,14 @@ cargo run -- path/to/WORKFLOW.md
 
 If the workflow path is omitted, the service uses `./WORKFLOW.md`.
 
+Local `.env` files are loaded automatically from the current directory before startup validation. Existing process environment variables win over values in `.env`.
+
+Copy `.env.example` to `.env` and fill in local secrets:
+
+```sh
+cp .env.example .env
+```
+
 Enable the optional HTTP status surface with `--port` or `server.port` in `WORKFLOW.md`:
 
 ```sh
@@ -22,6 +30,17 @@ The HTTP extension binds `127.0.0.1` and serves:
 - `GET /api/v1/state`
 - `GET /api/v1/{issue_identifier}`
 - `POST /api/v1/refresh`
+
+If you use `mise`, the repo includes convenience tasks:
+
+```sh
+mise run test
+mise run lint
+mise run verify
+mise run symphony
+```
+
+Set `SYMPHONY_WORKFLOW` and `SYMPHONY_PORT` to customize the `symphony` task.
 
 ## Implementation-Defined Policy
 
