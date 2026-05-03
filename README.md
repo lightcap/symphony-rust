@@ -46,3 +46,5 @@ This implementation targets trusted developer automation environments.
 ## Notes
 
 The Codex app-server client uses the generated JSON-RPC v2 method names available in current Codex CLI builds: `initialize`, `thread/start`, and `turn/start`. Codex-owned policy values such as `approval_policy`, `thread_sandbox`, and `turn_sandbox_policy` are passed through as workflow-provided JSON values.
+
+The upstream Symphony specification is vendored at `docs/specs/SPEC.md` for implementation reference.
