@@ -4,6 +4,7 @@ use std::time::Duration;
 use async_trait::async_trait;
 use chrono::{DateTime, Utc};
 use reqwest::StatusCode;
+use reqwest::header::AUTHORIZATION;
 use serde_json::{Value, json};
 use thiserror::Error;
 
@@ -22,8 +23,8 @@ pub enum TrackerError {
     MissingProjectSlug,
     #[error("linear_api_request reason={0}")]
     LinearApiRequest(String),
-    #[error("linear_api_status status={0}")]
-    LinearApiStatus(StatusCode),
+    #[error("linear_api_status status={status} body={body}")]
+    LinearApiStatus { status: StatusCode, body: String },
     #[error("linear_graphql_errors errors={0}")]
     LinearGraphqlErrors(Value),
     #[error("linear_unknown_payload reason={0}")]
@@ -88,7 +89,7 @@ impl LinearTracker {
         let response = self
             .client
             .post(&config.tracker.endpoint)
-            .bearer_auth(api_key)
+            .header(AUTHORIZATION, linear_auth_header_value(api_key))
             .json(&json!({ "query": query, "variables": variables }))
             .send()
             .await
@@ -96,7 +97,8 @@ impl LinearTracker {
 
         let status = response.status();
         if !status.is_success() {
-            return Err(TrackerError::LinearApiStatus(status));
+            let body = response.text().await.unwrap_or_default();
+            return Err(TrackerError::LinearApiStatus { status, body });
         }
 
         let payload = response
@@ -110,6 +112,10 @@ impl LinearTracker {
 
         Ok(payload)
     }
+}
+
+fn linear_auth_header_value(api_key: &str) -> &str {
+    api_key
 }
 
 impl Default for LinearTracker {
@@ -407,5 +413,10 @@ mod tests {
             validate_single_graphql_operation("query A { viewer { id } } mutation B { x }")
                 .is_err()
         );
+    }
+
+    #[test]
+    fn linear_auth_header_uses_raw_api_key() {
+        assert_eq!(linear_auth_header_value("lin_api_secret"), "lin_api_secret");
     }
 }
